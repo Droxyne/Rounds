@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111715" />
+  <meta name="description" content="BLACKLINE — a procedural, touch-first tactical body-camera FPS. Train, gear up, and clear the facility." />
+  <title>BLACKLINE — Tactical Operations</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9S4 17 4 12V6Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5Zm4 4c3 2 3 6 0 8m3-11c5 4 5 10 0 14"/></symbol>
+    <symbol id="i-reload" viewBox="0 0 24 24"><path d="M19 9a8 8 0 1 0 1 7M19 3v6h-6"/></symbol>
+    <symbol id="i-crouch" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="m12 8-4 5 6 3-4 5m1-11 6 3h4M8 13l-4 5"/></symbol>
+    <symbol id="i-light" viewBox="0 0 24 24"><path d="M8 21h8V11l3-7H5l3 7Zm0-10h8M8 1h8"/></symbol>
+    <symbol id="i-grenade" viewBox="0 0 24 24"><path d="M9 6h6l3 5v7l-3 3H9l-3-3v-7Zm1 0V3h5l5 8M6 13h12M7 17h10M12 7v14"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  </defs></svg>
+  <canvas id="renderCanvas" aria-label="3D tactical game environment"></canvas>
+  <div id="film-overlay" aria-hidden="true"></div>
+  <div id="boot" class="boot">
+    <div class="boot-brand"><span class="brand-mark">B<span>╱</span></span> BLACKLINE<span class="boot-tm">®</span></div>
+    <div class="boot-sub">TACTICAL OPERATIONS / BODYCAM SYSTEM</div>
+    <div class="boot-progress"><i id="boot-fill"></i></div>
+    <div class="boot-line"><span id="boot-status">INITIALIZING RENDERER</span><span id="boot-percent">00%</span></div>
+    <div class="boot-warning">HEADPHONES RECOMMENDED <span>·</span> WEBGL 2.0</div>
+  </div>
+  <div id="error" class="hidden"><h1>Renderer unavailable</h1><p id="error-message"></p><button id="retry">RETRY INITIALIZATION</button></div>
+  <main id="menu" class="hidden screen">
+    <header class="topbar">
+      <button class="brand" data-action="home" aria-label="Blackline operations"><span class="brand-mark">B<span>╱</span></span><span>BLACKLINE<sup>®</sup></span></button>
+      <nav aria-label="Main navigation"><button class="nav-item active" data-action="home">OPERATIONS</button><button class="nav-item" data-action="armory">ARMORY <span>20</span></button><button class="nav-item" data-action="manual">FIELD MANUAL</button></nav>
+      <div class="profile"><span class="cash" data-cash>$1,200</span><span class="profile-separator"></span><span class="operator-badge">OP</span><span class="profile-name">OPERATOR<small>LOCAL PROFILE</small></span><button class="icon-button" data-action="settings" aria-label="Settings">⚙</button></div>
+    </header>
+    <div class="menu-body">
+      <section class="hero-copy">
+        <div class="eyebrow"><i class="live-dot"></i> SYSTEM ONLINE <span> // </span> BUILD 1.0.0</div>
+        <h1>NO SECOND<br/><span>CHANCES.</span></h1>
+        <p class="hero-description">Close quarters. Unforgiving combat.<br/>Every corner is a decision.</p>
+        <div class="mode-selector" role="group" aria-label="Select operation">
+          <button class="mode-card selected" data-mode="deployment"><span class="mode-icon"><svg><use href="#i-shield"/></svg></span><span class="mode-text"><b>TACTICAL DEPLOYMENT</b><small>LIVE HOSTILES <i>·</i> WAVE SURVIVAL</small></span><span class="mode-radio"></span></button>
+          <button class="mode-card" data-mode="training"><span class="mode-icon"><svg><use href="#i-cross"/></svg></span><span class="mode-text"><b>TRAINING FACILITY</b><small>FREE RANGE <i>·</i> ALL WEAPONS UNLOCKED</small></span><span class="mode-radio"></span></button>
+        </div>
+        <button class="deploy-button" data-action="deploy"><span>DEPLOY TO SECTOR</span><svg><use href="#i-arrow"/></svg></button>
+        <div class="deploy-note"><span class="tiny-lock">▣</span> SOLO OPERATION <span>NO CONNECTION REQUIRED</span></div>
+      </section>
+      <aside class="scene-intel"><div class="intel-bracket"></div><div class="intel-top"><span class="live-dot"></span> LIVE FEED <span>CAM_04</span></div><div class="intel-bottom"><span>LOCATION INTEL</span><h2>THE FACILITY</h2><p>INDUSTRIAL SECTOR <i>/</i> 04</p><div class="intel-tags"><span>CQB</span><span>LOW VISIBILITY</span><span>HOSTILE</span></div><div class="intel-coordinates">30°02′41.2″N &nbsp; 31°14′08.7″E</div></div></aside>
+      <div class="camera-label"><span>BL / BODYCAM</span><b id="menu-timecode">00:00:00:00</b><small>WIDE-ANGLE SENSOR &nbsp; / &nbsp; LIVE</small></div>
+    </div>
+    <footer class="menu-footer"><div class="footer-status"><i class="live-dot"></i><span>ALL SYSTEMS OPERATIONAL</span></div><div class="footer-tip"><svg><use href="#i-volume"/></svg> USE HEADPHONES. TRUST YOUR INSTINCTS.</div><div class="footer-build">PROCEDURAL ENGINE <span> // </span> V.1.0</div></footer>
+  </main>
+  <section id="hud" class="hidden">
+    <div id="look-zone" aria-label="Drag to look"></div>
+    <div id="scope-overlay" class="hidden" aria-hidden="true">
+      <div class="scope-lens">
+        <svg viewBox="0 0 1000 1000" aria-hidden="true">
+          <g class="scope-reticle"><path d="M0 500h478m44 0h478M500 0v478m0 44v478"/>
+            <path d="M390 491v18m-110-18v18m-110-18v18m440-18v18m110-18v18m110-18v18M491 390h18m-18-110h18m-18-110h18m-18 440h18m-18 110h18m-18 110h18"/>
+          </g><circle class="scope-aimpoint" cx="500" cy="500" r="3"/>
+        </svg>
+        <span id="scope-magnification">4× OPTIC</span>
+      </div>
+    </div>
+    <div class="hud-top"><div class="recording"><i></i> REC <span id="mission-clock">00:00:00</span><small>BL—04 / BODYCAM</small></div><div class="mission-status"><span id="mission-label">TACTICAL DEPLOYMENT</span><b id="wave-label">WAVE 01</b><small id="hostile-count">3 HOSTILES REMAINING</small></div><button class="hud-pause" data-action="pause" aria-label="Pause"><svg><use href="#i-pause"/></svg></button></div>
+    <div id="compass"><span>SW</span><span>240</span><span>W</span><b id="bearing">000</b><span>N</span><span>30</span><span>NE</span></div>
+    <div id="crosshair"><i></i><i></i><i></i><i></i><b></b></div><div id="hitmarker">×</div>
+    <div id="damage-overlay"></div><svg id="cracked-visor" viewBox="0 0 1000 700" preserveAspectRatio="none"><path d="m0 450 140-70 77 62 96-119-28-101 70-70m-138 290 9 97 73 50m-159-209 63-70-5-90M1000 110 870 180l-53-51-72 106 14 89-90 73m148-268-6-77m59 128 43 76 87 19"/></svg>
+    <div id="popups"></div><div id="kill-feed"></div>
+    <div id="announcement"><span></span><b></b><small></small></div>
+    <div class="hud-bottom"><div class="health-block"><div><svg><use href="#i-shield"/></svg><b id="health-value">100</b><span>VITALS</span></div><div class="health-track"><i id="health-fill"></i></div><small id="grenade-count">02 FRAG GRENADES</small></div><div class="desktop-controls"><span>W A S D <i>MOVE</i></span><span>R <i>RELOAD</i></span><span>F <i>LIGHT</i></span><span>TAB <i>ARMORY</i></span></div><div class="ammo-block"><small id="weapon-name">M4A1 SOPMOD</small><div><b id="ammo-value">30</b><span>/ <i id="reserve-value">150</i></span></div><small id="fire-mode">5.56 × 45 MM &nbsp; / &nbsp; AUTO</small></div></div>
+    <div id="reload-indicator" class="hidden"><span>RELOADING</span><div><i></i></div></div>
+    <div id="touch-controls">
+      <div id="joystick"><div class="joystick-guides">+<br/>+</div><div id="joystick-nub"></div><span>MOVE</span></div>
+      <div class="touch-left-tools"><button data-combat="lean-left" aria-label="Lean left">↶<small>LEAN</small></button><button data-combat="lean-right" aria-label="Lean right">↷<small>LEAN</small></button></div>
+      <button class="touch-fire-left" data-combat="fire" data-aim-drag="false" aria-label="Fire (left)"><svg><use href="#i-cross"/></svg><small>FIRE</small></button>
+      <button class="touch-fire" data-combat="fire" aria-label="Fire"><svg><use href="#i-cross"/></svg><small>FIRE</small></button>
+      <button class="touch-ads" data-combat="ads" aria-label="Aim down sights"><svg><use href="#i-cross"/></svg><small>ADS</small></button>
+      <button class="touch-reload" data-combat="reload" aria-label="Reload"><svg><use href="#i-reload"/></svg></button>
+      <button class="touch-crouch" data-combat="crouch" aria-label="Crouch"><svg><use href="#i-crouch"/></svg></button>
+      <div class="touch-tools"><button data-combat="flashlight" aria-label="Flashlight"><svg><use href="#i-light"/></svg></button><button data-combat="grenade" aria-label="Throw grenade"><svg><use href="#i-grenade"/></svg></button><button data-combat="swap" aria-label="Swap weapon"><svg><use href="#i-swap"/></svg></button><button data-combat="armory" aria-label="Open armory">▤</button></div>
+    </div>
+    <div id="training-hint" class="hidden">BALLISTICS LAB <span>All weapons available · Open armory to equip</span></div>
+  </section>
+  <section id="armory" class="screen hidden">
+    <header class="panel-header"><button class="back-button" data-action="close-panel">← <span>BACK TO OPERATIONS</span></button><div class="panel-title">THE ARMORY <small>LOADOUT CONFIGURATION / 20 PLATFORMS</small></div><span class="cash" data-cash>$1,200</span></header>
+    <div class="armory-layout"><div class="weapon-inspect"><div class="eyebrow">WEAPON PLATFORM <span id="weapon-index">09 / 20</span></div><h2 id="inspect-name">M4A1 SOPMOD</h2><p id="inspect-category">ASSAULT RIFLES / MODULAR WEAPON SYSTEM</p><div class="inspect-guide">↔ DRAG TO INSPECT <span>PROCEDURALLY MACHINED / 1:1</span></div><div id="inspect-drag"></div></div><aside class="weapon-specs"><div class="section-label">PLATFORM SPECIFICATIONS</div><div id="weapon-stats"></div><div class="section-label attachment-heading">ATTACHMENT RAILS <small>SELECT TO FIT</small></div><div id="attachment-list"></div><button id="equip-button" class="deploy-button">EQUIP WEAPON</button><p id="equip-hint"></p></aside></div>
+    <div class="arsenal-tray"><div id="category-tabs"></div><div id="weapon-grid"></div></div>
+  </section>
+  <div id="modal-backdrop" class="hidden"><section id="settings" class="modal hidden"><div class="modal-heading"><div class="eyebrow">SYSTEM CONFIGURATION</div><h2>FIELD SETTINGS</h2><button data-action="close-modal" class="modal-close" aria-label="Close">×</button></div><div class="setting-row"><div><b>RENDER QUALITY</b><small>Resolution & shadow detail. Applied immediately.</small></div><div id="quality-options" class="segmented"></div></div><div class="setting-row"><div><b>DYNAMIC SHADOWS</b><small>Weapon light shadow casting</small></div><button id="shadow-toggle" class="toggle" role="switch" aria-label="Dynamic shadows"></button></div><div class="setting-row"><div><b>BODYCAM PROCESSING</b><small>Fisheye, chromatic aberration, bloom & grain</small></div><button id="post-toggle" class="toggle" role="switch" aria-label="Post processing"></button></div><label class="setting-row slider-row"><div><b>FIELD OF VIEW</b><output id="fov-output">88°</output></div><input id="fov-setting" type="range" min="65" max="110" step="1"/></label><label class="setting-row slider-row"><div><b>TOUCH SENSITIVITY</b><output id="sensitivity-output">1.0×</output></div><input id="sensitivity-setting" type="range" min="0.3" max="2.5" step="0.1"/></label><label class="setting-row slider-row"><div><b>MASTER AUDIO</b><output id="volume-output">65%</output></div><input id="volume-setting" type="range" min="0" max="1" step="0.05"/></label><div class="settings-footer"><span id="performance-readout">BABYLON.JS / WEBGL</span><span>SETTINGS AUTO-SAVED</span></div></section>
+    <section id="manual" class="modal hidden"><div class="modal-heading"><div class="eyebrow">OPERATOR BRIEFING / 001</div><h2>KNOW YOUR ENVIRONMENT.</h2><button data-action="close-modal" class="modal-close" aria-label="Close">×</button></div><p class="manual-intro">Survive escalating hostile waves. Use cover, listen for contact, and keep your light on in the dark. Your cash and weapons persist between deployments.</p><div class="manual-columns"><div><h3>DESKTOP CONTROLS</h3><dl><dt>W A S D</dt><dd>Move</dd><dt>MOUSE</dt><dd>Look / fire / right-click ADS</dd><dt>SHIFT</dt><dd>Sprint</dd><dt>C / CTRL</dt><dd>Toggle crouch</dd><dt>Q / E</dt><dd>Lean left / right</dd><dt>R / F / G</dt><dd>Reload / flashlight / grenade</dd><dt>X / TAB</dt><dd>Swap / armory</dd><dt>ESC</dt><dd>Pause</dd></dl></div><div><h3>TOUCH OPERATIONS</h3><p>Left thumb moves. Drag anywhere else to aim. Fire and aim work simultaneously with movement. Tap ADS to toggle.</p><h3>FIELD ECONOMY</h3><p>Elimination <b>$150</b><br/>Headshot bonus <b>$100</b><br/>Wave clear <b>$450+</b><br/>60% accuracy bonus <b>$200</b></p><p class="muted">Training unlocks all platforms and attachments free. No cash is earned in training.</p></div></div><button class="deploy-button" data-action="close-modal">UNDERSTOOD <svg><use href="#i-arrow"/></svg></button></section>
+    <section id="pause" class="modal compact hidden"><div class="eyebrow">BODYCAM FEED SUSPENDED</div><h2>HOLD POSITION.</h2><p>Your operation is paused.</p><button class="deploy-button" data-action="resume">RESUME OPERATION <svg><use href="#i-arrow"/></svg></button><button class="secondary-button" data-action="armory">CONFIGURE LOADOUT</button><button class="secondary-button" data-action="settings">FIELD SETTINGS</button><button class="text-button" data-action="exit">EXTRACT TO MENU</button></section>
+    <section id="debrief" class="modal compact hidden"><div class="eyebrow">SIGNAL LOST / OPERATION ENDED</div><h2>OPERATOR DOWN.</h2><p>Debrief complete. Earned cash has been retained.</p><div id="debrief-stats"></div><button class="deploy-button" data-action="redeploy">REDEPLOY <svg><use href="#i-arrow"/></svg></button><button class="secondary-button" data-action="exit">RETURN TO OPERATIONS</button></section>
+  </div>
+  <div id="toast" role="status"></div><div id="orientation-tip">ROTATE FOR A WIDER FIELD OF VIEW <span>↻</span></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
